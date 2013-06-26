@@ -42,24 +42,38 @@ then
     exit 0
 fi
 
-# Deployment
-ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "killall -9 server"
+if [ "${FIRSTARG}" = "dev-deploy" ]
+then
+    DEPLOY_BOX="ec2-54-227-84-172.compute-1.amazonaws.com"
+elif [ "${FIRSTARG}" = "prod-deploy" ]
+then
+    DEPLOY_BOX="ec2-50-19-201-81.compute-1.amazonaws.com"
+else
+    echo "Invalid argument: ${FIRSTARG}"
+    echo "Options are: unittest, dev-deploy, prod-deploy"
+    exit 1
+fi
 
-scp -i $SSH_IDENTITY bin/server ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com:
+echo "Deploying to: ${DEPLOY_BOX}"
+
+# Deployment
+ssh -i $SSH_IDENTITY ubuntu@${DEPLOY_BOX} "killall -9 server"
+
+scp -i $SSH_IDENTITY bin/server ubuntu@${DEPLOY_BOX}:
 if [ $? -ne 0 ]
 then
     echo "Server deploy failed, exiting"
     exit 1   
 fi
 
-scp -i $SSH_IDENTITY script/startgo.sh ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com:
+scp -i $SSH_IDENTITY script/startgo.sh ubuntu@${DEPLOY_BOX}:
 if [ $? -ne 0 ]
 then
     echo "Server script deploy failed, exiting"
     exit 1
 fi
 
-ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "./startgo.sh"
+ssh -i $SSH_IDENTITY ubuntu@${DEPLOY_BOX} "./startgo.sh"
 
 if [ $? -ne 0 ]
 then
@@ -67,7 +81,7 @@ then
     exit 1
 fi
 
-python script/clienttest.py ec2-54-227-84-172.compute-1.amazonaws.com
+python script/clienttest.py ${DEPLOY_BOX}
 if [ $? -ne 0 ]
 then
     echo "IRC Server system test failed, exiting"
