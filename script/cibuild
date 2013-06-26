@@ -35,6 +35,13 @@ then
     exit 1   
 fi
 
+FIRSTARG="$(echo $1 | tr '[:upper:]' '[:lower:]')"
+if [ "${FIRSTARG}" = "unittest" ]
+then
+    echo "Local Unit Tests Passed"
+    exit 0
+fi
+
 # Deployment
 ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "killall -9 server"
 
