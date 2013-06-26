@@ -12,7 +12,7 @@ import (
 )
 
 var running bool;  // global variable if client is running
-var debug = flag.Bool("d", false, "set the debug modus( print informations )")
+var debug = flag.Bool("d", false, "enable debug mode ( display debugging information )")
 var server = flag.String("s", "", "server name to connect to")
 var port = flag.String("p", "" , "port number to connect to")
 
