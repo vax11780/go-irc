@@ -49,9 +49,9 @@ elif [ "${FIRSTARG}" = "prod-deploy" ]
 then
     DEPLOY_BOX="ec2-50-19-201-81.compute-1.amazonaws.com"
 else
-    echo "Invalid argument: ${FIRSTARG}"
-    echo "Options are: unittest, dev-deploy, prod-deploy"
-    exit 1
+    echo "Warning: Invalid argument: ${FIRSTARG}"
+    echo "Warning: assuming dev-deploy"
+    DEPLOY_BOX="ec2-54-227-84-172.compute-1.amazonaws.com"
 fi
 
 echo "Deploying to: ${DEPLOY_BOX}"
