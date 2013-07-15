@@ -45,19 +45,19 @@ then
     exit 1   
 fi
 
-python script/clienttest.py ec2-54-227-84-172.compute-1.amazonaws.com
-if [ $? -ne 0 ]
-then
-    echo "IRC Server system test failed, exiting"
-    exit 1   
-fi
-
 ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "go run server.go -d &"
 
 if [ $? -ne 0 ]
 then
     echo "SSH of server to test box failed, exiting"
     exit 1
+fi
+
+python script/clienttest.py ec2-54-227-84-172.compute-1.amazonaws.com
+if [ $? -ne 0 ]
+then
+    echo "IRC Server system test failed, exiting"
+    exit 1   
 fi
 
 echo "Deployment completed successfully"
