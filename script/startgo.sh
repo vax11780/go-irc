@@ -1,3 +1,3 @@
 #!/usr/bin/bash
 
-go run server.go -d &
+nohup go run server.go -d &

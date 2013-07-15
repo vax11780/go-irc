@@ -45,7 +45,14 @@ then
     exit 1   
 fi
 
-ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "go run server.go -d &"
+scp -i $SSH_IDENTITY script/startgo.sh ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com:
+if [ $? -ne 0 ]
+then
+    echo "Server script deploy failed, exiting"
+    exit 1
+fi
+
+ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "startgo.go"
 
 if [ $? -ne 0 ]
 then
