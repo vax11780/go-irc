@@ -21,3 +21,4 @@ TODO:
 * Add ability to execute LUA or other scripts with a "/command <string>" similiar to /quit
 
 
+go run client/client.go -s localhost -p 9999

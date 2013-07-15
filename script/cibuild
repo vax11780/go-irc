@@ -22,8 +22,6 @@ fi
 
 echo "Build completed successfully, deploying to test box"
 
-scp bin/server ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com
-
 if [ `whoami` = "jenkins" ]
 then
     SSH_IDENTITY=~/.ssh/id_rsa
@@ -31,13 +29,23 @@ else
     SSH_IDENTITY=~/.ssh/virginia.pem
 fi
 
-#ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "server -d &"
+scp -i $SSH_IDENTITY server/server.go ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com:
 
-#if [ $? -ne 0 ]
-#then
-#    echo "SSH of server to test box failed, exiting"
-#    exit 1
-#fi
+if [ $? -ne 0 ]
+then
+    echo "Server deploy failed, exiting"
+    exit 1   
+fi
+
+ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "killall -9 go"
+
+ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "go run server.go -d &"
+
+if [ $? -ne 0 ]
+then
+    echo "SSH of server to test box failed, exiting"
+    exit 1
+fi
 
 echo "Deployment completed successfully"
 
