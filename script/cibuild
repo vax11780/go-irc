@@ -20,8 +20,14 @@ then
     exit 1   
 fi
 
-echo "Build completed successfully, deploying to test box"
+python script/clienttest.py
+if [ $? -ne 0 ]
+then
+    echo "IRC Server unit test failed, exiting"
+    exit 1   
+fi
 
+echo "Build and unit test completed successfully, deploying to test box"
 scp bin/server ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com
 
 if [ `whoami` = "jenkins" ]
@@ -30,6 +36,14 @@ then
 else
     SSH_IDENTITY=~/.ssh/virginia.pem
 fi
+
+python script/clienttest.py ec2-54-227-84-172.compute-1.amazonaws.com
+if [ $? -ne 0 ]
+then
+    echo "IRC Server system test failed, exiting"
+    exit 1   
+fi
+
 
 #ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "server -d &"
 
