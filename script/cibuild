@@ -1,5 +1,12 @@
 #!/bin/sh
 
+if [ `whoami` = "jenkins" ]
+then
+    SSH_IDENTITY=~/.ssh/id_rsa
+else
+    SSH_IDENTITY=~/.ssh/virginia.pem
+fi
+
 mkdir bin
 
 echo "Building client with go"
@@ -20,24 +27,30 @@ then
     exit 1   
 fi
 
-echo "Build completed successfully, deploying to test box"
-
-if [ `whoami` = "jenkins" ]
+echo "Performing unit test"
+python script/clienttest.py
+if [ $? -ne 0 ]
 then
-    SSH_IDENTITY=~/.ssh/id_rsa
-else
-    SSH_IDENTITY=~/.ssh/virginia.pem
+    echo "IRC Server unit test failed, exiting"
+    exit 1   
 fi
 
-scp -i $SSH_IDENTITY server/server.go ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com:
+# Deployment
+ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "killall -9 go"
 
+scp -i $SSH_IDENTITY server/server.go ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com:
 if [ $? -ne 0 ]
 then
     echo "Server deploy failed, exiting"
     exit 1   
 fi
 
-ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "killall -9 go"
+python script/clienttest.py ec2-54-227-84-172.compute-1.amazonaws.com
+if [ $? -ne 0 ]
+then
+    echo "IRC Server system test failed, exiting"
+    exit 1   
+fi
 
 ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "go run server.go -d &"
 
