@@ -52,7 +52,7 @@ then
     exit 1
 fi
 
-ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "startgo.go"
+ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "./startgo.go"
 
 if [ $? -ne 0 ]
 then
