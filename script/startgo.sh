@@ -1,3 +1,3 @@
-#!/usr/bin/bash
+#!/bin/bash
 
-nohup go run server.go -d &
+nohup ./server >nohup.out 2>&1 &

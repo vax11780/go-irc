@@ -36,9 +36,9 @@ then
 fi
 
 # Deployment
-ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "killall -9 go"
+ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "killall -9 server"
 
-scp -i $SSH_IDENTITY server/server.go ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com:
+scp -i $SSH_IDENTITY bin/server ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com:
 if [ $? -ne 0 ]
 then
     echo "Server deploy failed, exiting"
@@ -52,7 +52,7 @@ then
     exit 1
 fi
 
-ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "./startgo.go"
+ssh -i $SSH_IDENTITY ubuntu@ec2-54-227-84-172.compute-1.amazonaws.com "./startgo.sh"
 
 if [ $? -ne 0 ]
 then
