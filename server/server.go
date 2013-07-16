@@ -119,8 +119,8 @@ func clientreceiver(client *ClientChat) {
         }
     }    
 
-    //client.OUT <- client.Name+" has left chat";
-    //Log("clientreceiver(): stop for: ", client.Name);
+    client.OUT <- client.Name+" has left chat";
+    Log("clientreceiver(): stop for: ", client.Name);
 }
 
 // clientsender(): get the data from handlingINOUT via channel (or quit signal from
