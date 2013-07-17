@@ -155,7 +155,7 @@ func clientHandling(con net.Conn, ch chan string, lst *list.List) {
     go clientreceiver(newclient);
     lst.PushBack(*newclient);
     ch<- name+" has joinet the chat";
-    ch<- "\nl33t 2 only";
+    ch<- "\nl33ty only";
 }
 
 func main() {
