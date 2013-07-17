@@ -59,11 +59,12 @@ BRANCH=`git status | grep -o "Your branch is behind"`
 echo Branch: ${BRANCH}
 if [ "${BRANCH}" = "Your branch is behind" ] 
 then
-    echo "Testing on master" 
-    DEPLOY_BOX="ec2-50-19-201-81.compute-1.amazonaws.com"
-else
     echo "Testing on branch" 
     DEPLOY_BOX="ec2-54-227-84-172.compute-1.amazonaws.com"
+else
+    echo "Testing on master" 
+    DEPLOY_BOX="ec2-50-19-201-81.compute-1.amazonaws.com"
+
 fi
 
 echo "Deploying to: ${DEPLOY_BOX}"
