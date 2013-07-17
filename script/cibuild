@@ -36,11 +36,6 @@ then
 fi
 
 FIRSTARG="$(echo $1 | tr '[:upper:]' '[:lower:]')"
-if [ "${FIRSTARG}" = "unittest" ]
-then
-    echo "Local Unit Tests Passed"
-    exit 0
-fi
 
 if [ "${FIRSTARG}" = "dev-deploy" ]
 then
@@ -48,9 +43,25 @@ then
 elif [ "${FIRSTARG}" = "prod-deploy" ]
 then
     DEPLOY_BOX="ec2-50-19-201-81.compute-1.amazonaws.com"
+elif [ "${FIRSTARG}" = "unittest" ]
+then
+    echo "Local Unit Tests Passed"
+    exit 0
 else
-    echo "Warning: Invalid argument: ${FIRSTARG}"
-    echo "Warning: assuming dev-deploy"
+    echo "Unknown build command"
+    exit 0		
+fi
+
+#For now use the branch name to determine who to deploy to
+#Eventually jenkins will have a different build script based on branch versus master!
+BRANCH=`git branch -a | grep "\*"`
+echo Branch: ${BRANCH}
+if [ "${BRANCH}" = "* master" ] 
+then
+    echo "Testing on master" 
+    DEPLOY_BOX="ec2-50-19-201-81.compute-1.amazonaws.com"
+else
+    echo "Testing on branch" 
     DEPLOY_BOX="ec2-54-227-84-172.compute-1.amazonaws.com"
 fi
 
