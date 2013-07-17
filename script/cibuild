@@ -54,9 +54,9 @@ fi
 
 #For now use the branch name to determine who to deploy to
 #Eventually jenkins will have a different build script based on branch versus master!
-BRANCH=`git branch -a | grep "\*"`
+BRANCH=`git status | grep -o "Your branch is behind"`
 echo Branch: ${BRANCH}
-if [ "${BRANCH}" = "* master" ] 
+if [ "${BRANCH}" = "Your branch is behind" ] 
 then
     echo "Testing on master" 
     DEPLOY_BOX="ec2-50-19-201-81.compute-1.amazonaws.com"
