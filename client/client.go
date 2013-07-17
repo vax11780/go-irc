@@ -9,12 +9,14 @@ import (
     "bufio";
     "time";
     "flag";
+    "os/user";
 )
 
 var running bool;  // global variable if client is running
 var debug = flag.Bool("d", false, "enable debug mode ( display debugging information )")
 var server = flag.String("s", "", "server name to connect to")
 var port = flag.String("p", "" , "port number to connect to")
+var current_user,_ = user.Current()
 
 // func Log(v ...): loging. give log information if debug is true
 
@@ -82,6 +84,11 @@ func usage() {
 func main() {
    flag.Usage = usage;
    flag.Parse();
+    fmt.Print("Hello ")
+    fmt.Print(current_user.Name)
+    fmt.Print(" \n Who lives in ")
+    fmt.Print(current_user.HomeDir)
+    fmt.Print(" \n")
     
     running = true;
     Log("main(): start ");
